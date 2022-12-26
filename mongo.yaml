@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  analytics-2:    
+    image: mongo:4.4.17
+    entrypoint: [ "/usr/bin/mongod", "--keyFile", "/data/mongo-repl.key", "--replSet", "analytics-rs", "--journal", "--dbpath", "/data/db", "--bind_ip_all" ]
+    ports:
+      - "20003:27017"
+    
+    networks:
+      monitoring-network:
+
+    volumes:
+      - "$PWD/mongodb/mongo-repl.key:/data/mongo-repl.key"
+      - "$PWD/mongodb/data/db2:/data/db"
+
+  analytics-1:    
+    image: mongo:4.4.17
+    entrypoint: [ "/usr/bin/mongod", "--keyFile", "/data/mongo-repl.key", "--replSet", "analytics-rs", "--journal", "--dbpath", "/data/db", "--bind_ip_all" ]
+    ports:
+      - "20002:27017"
+    
+    networks:
+      monitoring-network:
+
+    volumes:
+      - "$PWD/mongodb/mongo-repl.key:/data/mongo-repl.key"
+      - "$PWD/mongodb/data/db1:/data/db"
+
+  analytics-0:    
+    image: mongo:4.4.17
+    command: bash -c "/usr/bin/mongod --keyFile /data/mongo-repl.key --replSet analytics-rs --journal --dbpath /data/db --bind_ip_all"
+    ports:
+      - "20001:27017"
+    
+    networks:
+      monitoring-network:
+
+    volumes:
+      - "$PWD/mongodb/setup.sh:/scripts/setup.sh"
+      - "$PWD/mongodb/mongo-repl.key:/data/mongo-repl.key"
+      - "$PWD/mongodb/data/db0:/data/db"
+
+
+networks:
+    monitoring-network:
+        # external: true

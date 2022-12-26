@@ -1,0 +1,11 @@
+const { isStringLiteralLike } = require("typescript")
+
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+README.md
+user
+mongodb
+git_push.sh
+env

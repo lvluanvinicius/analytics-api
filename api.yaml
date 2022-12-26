@@ -1,0 +1,16 @@
+
+version: '3.7'
+
+services:
+  analytics_gpon:
+    image: analytics:1.1
+    ports: 
+      - "8081:8081"
+
+    networks:
+      monitoring-network:
+
+
+networks:
+    monitoring-network:
+        # external: true
