@@ -1,6 +1,7 @@
 const { isStringLiteralLike } = require("typescript")
 
 node_modules
+vendor/node_modules
 npm-debug.log
 Dockerfile
 .dockerignore

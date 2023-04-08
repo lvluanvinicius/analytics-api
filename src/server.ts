@@ -9,6 +9,8 @@ import gponOnusDbmRoute from './routes/gponOnusDbm';
 import usersRouter from './routes/login';
 import jwtProtected from './Http/Middlewares/JwtMiddleware';
 import gponAnalyticsRouter from './routes/gponAnalytics';
+import gponOnusDbmRouteV2 from './routes/gponOnusDbmV2';
+import percentilRouter from './routes/percentil';
  
 const server = express();
 const route = Router();
@@ -48,7 +50,16 @@ server.use("/users", usersRouter);
  * Routes: 
  *  -> Destinadas a função de recolhimento de dados voltados a ONUs. 
  */
-server.use("/datacom", jwtProtected, [gponOnusDbmRoute,gponAnalyticsRouter]);
+server.use("/get-onus-dbm", jwtProtected, [gponOnusDbmRoute,gponAnalyticsRouter]);
+
+
+/**
+ * .
+ */
+server.use("/datacom", [gponOnusDbmRouteV2]);
+
+
+server.use('/percentil', jwtProtected, [percentilRouter]);
 
 
 /**
@@ -62,6 +73,6 @@ const sslServer = https.createServer({
 /**
  * Iniciando escuta do servidor.
  */
-sslServer.listen(8081, () => {
+sslServer.listen(8081, '0.0.0.0', () => {
     console.log("Server listening....");
 });

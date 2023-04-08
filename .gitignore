@@ -6,3 +6,5 @@ private.login
 certs/*.pem
 git_push.sh
 env
+
+vendor/del_mdb/node_modules
