@@ -13,60 +13,104 @@ from json import dumps
 import datetime
 import math
 
-zapi = connect()
 
-time_from = 1680787047
-time_till = 1680789087
+zapi = connect()
 
 items = zapi.history.get({
     "output": "extend",
     "history": 3,
     "itemids": [282627], #item de coleta valor médio no intervalo de 5 min    
     "sortorder": "DESC",
-    # "limit": 10,
-    "time_from": time_from,  
-    "time_till": time_till,  
     "sortfield": "clock"
 })
 
-itemAux=[]
+
+#Lista de itens completos
+itemFull=[]
 for item in items:
-    if int(item['value']) > 800000000: # 1G - 8589934592 10G - 85899345920 
-        itemAux.append(item['value'])
+        itemFull.append(item['value'])
 
 
-itemAux.sort() 
+#Lista de items acima de 10gb
+item10Max=[]
+for item in items:
+    if int(item['value']) > 80000000000: 
+        item10Max.append(item['value'])
 
-tamanho_original = len(itemAux)
-num_elementos_remover = math.ceil(0.05 * tamanho_original)
-itemAux = itemAux[num_elementos_remover:]
 
-itemsSeparados = []
+#Lista de items abaixo de 10gb
+item10Min=[]
+for item in items:
+    if int(item['value']) <= 80000000000: 
+        item10Min.append(item['value'])
 
+#Organiza lista de maneira crescente 
+item10Max.sort()
+itemOrder = item10Max
+
+#Com número de itens da lista realiza a media, removendo os 5% maximos da lista. (é necessário sempre remover)
+counter = len(itemOrder)
+removelist = math.ceil(0.05 * counter)
+itemAux = itemOrder[removelist:]
+
+#exibe os items que foram removidos.
+removedItems = itemOrder[:removelist]
+
+# #busca na lista o datatime do valor (Lista Completa).
+itemValueClock_full = []
+def localeItemRemoved(itemFull):
+    for it in items:
+        if itemFull == it['value']:
+            clock_datetime_full = datetime.datetime.fromtimestamp(int(it['clock']))
+            clock_formatted_full = clock_datetime_full.strftime('%Y/%m/%d %H:%M:%S')
+            itemValueClock_full.append({ "value": it['value'], "clock": clock_formatted_full})
+
+for itC in itemFull:
+     localeItemRemoved(itC)
+
+
+# #busca na lista o datatime do valor (Lista 5% Max).
+itemValueClock_5max = []
+def localeItemRemoved(removedItems):
+    for it in items:
+        if removedItems == it['value']:
+            clock_datetime_removed = datetime.datetime.fromtimestamp(int(it['clock']))
+            clock_formatted_removed = clock_datetime_removed.strftime('%Y/%m/%d %H:%M:%S')
+            itemValueClock_5max.append({ "value": it['value'], "clock": clock_formatted_removed})
+
+for itB in removedItems:
+     localeItemRemoved(itB)
+
+
+#busca na lista o datatime do valor (Lista 95%).
+itemValueClock_95 = []
 def localeItem(item):
     for it in items:
         if item == it['value']:
             clock_datetime = datetime.datetime.fromtimestamp(int(it['clock']))
             clock_formatted = clock_datetime.strftime('%Y/%m/%d %H:%M:%S')
-            itemsSeparados.append({ "value": it['value'], "clock": clock_formatted})
+            itemValueClock_95.append({ "value": it['value'], "clock": clock_formatted})
 
 for itA in itemAux:
     localeItem(itA)
 
 
 #Total de consumo 
-soma = sum([int(s) for s in itemAux])
-
-#Total de consumo em mb
-valor_megabytes = soma / (8 * 1000000)
-
-#Calculo em real
-real = valor_megabytes*2.00
+sum = sum([int(s) for s in itemAux])
+#Consumo total em mb
+megabytes = sum / (8 * 1000000)
+#Consumo em R$ (R$ 2,00 por MB)
+real = megabytes*2.00
 
 
-print(dumps(dumps({
-    "consumption": soma,
-    "value": valor_megabytes,
-    "real": real,
-    "separateItems": itemsSeparados
-})).strip())
+
+print(dumps({
+"consumo": sum,
+"valorMB": megabytes,
+"real": real,
+"itemValueClock_95": itemValueClock_95,
+"itemValueClock_5max": itemValueClock_5max,
+"item10Max" : item10Max,
+"item10Min" : item10Min,
+"itemFull" : itemFull,
+}))

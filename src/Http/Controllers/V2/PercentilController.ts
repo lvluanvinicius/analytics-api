@@ -8,6 +8,7 @@ export default class PercentilController {
 
         try {
             exec(`python3 ${__dirname}/../../../scripts/percentil.py`, (error, stdout, stderr) => {
+                
                 // Recuperando stderr do 'exec'.
                 if (stderr) {
                     return response.status(400).json({ message: stderr });
@@ -31,7 +32,7 @@ export default class PercentilController {
                     const stdResult = JSON.parse(stdout.replace(/\s/g, ''));
                     // Retornando a resposta do script ao usuário.
     
-                    return response.status(200).json({ COUNTS: JSON.parse(stdResult) });
+                    return response.status(200).json({ COUNTS: stdResult });
                 }
             });
         } catch (error) {
