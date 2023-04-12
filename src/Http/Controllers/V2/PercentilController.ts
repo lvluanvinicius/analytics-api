@@ -5,9 +5,20 @@ import ErrorsHandle from "../../../Helpers/errors.app";
 export default class PercentilController {
 
     async index(request: Request, response: Response) {
+        let time_from;
+        let time_to; 
 
+        if (!request.query.time_from || !request.query.time_to) {
+            return response.status(400).json({ message: "Por favor, informe os parametros time_from e time_to corretamente." });
+        } 
+
+        // Convertendo data em timestamp.
+        time_from = Date.parse(`${request.query.time_from}`);
+        time_to =  Date.parse(`${request.query.time_to}`); 
+        
         try {
-            exec(`python3 ${__dirname}/../../../scripts/percentil.py`, (error, stdout, stderr) => {
+            
+            exec(`python3 ${__dirname}/../../../scripts/percentil.py ${time_from} ${time_to}`, (error, stdout, stderr) => {
                 
                 // Recuperando stderr do 'exec'.
                 if (stderr) {
