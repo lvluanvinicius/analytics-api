@@ -31,6 +31,7 @@ server.use(cors());
  * ao criar um datasource.
  */
 route.all("/", (request: Request, response: Response) => {
+    console.log('aqui')
     return response.json("Hello! Welcome to api Analytics Server!");
 });
 

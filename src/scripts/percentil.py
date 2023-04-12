@@ -45,7 +45,7 @@ for item in items:
 #Lista de items acima de 10gb
 item10Max=[]
 for item in items:
-    if int(item['value']) > 80000000000: 
+    if int(item['value']) > 1000000000: 
         clock_datetime_full = datetime.datetime.fromtimestamp(int(item['clock']))
         clock_formatted_full = clock_datetime_full.strftime('%Y/%m/%d %H:%M:%S')
         item10Max.append({ "value": item['value'], "clock": clock_formatted_full})
@@ -54,7 +54,7 @@ for item in items:
 #Lista de items abaixo de 10gb
 item10Min=[]
 for item in items:
-    if int(item['value']) <= 80000000000: 
+    if int(item['value']) <= 1000000000: 
         clock_datetime_full = datetime.datetime.fromtimestamp(int(item['clock']))
         clock_formatted_full = clock_datetime_full.strftime('%Y/%m/%d %H:%M:%S')
         item10Min.append({ "value": item['value'], "clock": clock_formatted_full})
@@ -62,7 +62,7 @@ for item in items:
 
 
 #Organiza lista de maneira crescente 
-item10Max.sort()
+# item10Max.sort()
 itemOrder = item10Max
 
 #Com número de itens da lista realiza a media, removendo os 5% maximos da lista. (é necessário sempre remover)
