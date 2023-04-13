@@ -3,68 +3,43 @@ import { exec, ExecException, ExecFileException } from 'child_process';
 import ErrorsHandle from "../../../Helpers/errors.app";
 import { log } from "console";
 
-export default class PercentilController {
-
-    // async timeAgo(timeago: string) {
-
-    //     const agora = new Date();
-    //     const valor = parseInt(timeago.slice(0, -1));
-    //     const unidade = timeago.slice(-1);
-      
-    //     switch (unidade) {
-    //       case 'm':
-    //         agora.setMinutes(agora.getMinutes() - valor);
-    //         break;
-    //       case 'h':
-    //         agora.setHours(agora.getHours() - valor);
-    //         break;
-    //       case 'd':
-    //         agora.setDate(agora.getDate() - valor);
-    //         break;
-    //       default:
-    //         console.error('Unidade de tempo não suportada');
-    //         return null;
-    //     }
-      
-    //     return agora;
-    //   }
-      
+export default class PercentilController {      
 
     async index(request: Request, response: Response) {
         
-        if (!request.query.time) {
-            return response.status(400).json({ message: "Por favor, informe o parametro 'time' corretamente." });
-        } 
+        // if (!request.query.time) {
+        //     return response.status(400).json({ message: "Por favor, informe o parametro 'time' corretamente." });
+        // } 
 
-        let time = request.query.time as string;
+        // let time = request.query.time as string;
 
-        const ago = new Date();        
-        const valueAfter = parseInt(time.slice(0, -1));
-        const unidade = time.slice(-1);
+        // const ago = new Date();        
+        // const valueAfter = parseInt(time.slice(0, -1));
+        // const unidade = time.slice(-1);
       
-        switch (unidade) {
-          case 'm':
-            ago.setMinutes(ago.getMinutes() - valueAfter);
-            break;
-          case 'h':
-            ago.setHours(ago.getHours() - valueAfter);
-            break;
-          case 'd':
-            ago.setDate(ago.getDate() - valueAfter);
-            break;
-          default:
-            console.error('Unidade de tempo não suportada');
-        }
+        // switch (unidade) {
+        //   case 'm':
+        //     ago.setMinutes(ago.getMinutes() - valueAfter);
+        //     break;
+        //   case 'h':
+        //     ago.setHours(ago.getHours() - valueAfter);
+        //     break;
+        //   case 'd':
+        //     ago.setDate(ago.getDate() - valueAfter);
+        //     break;
+        //   default:
+        //     console.error('Unidade de tempo não suportada');
+        // }
               
     
 
-        // Convertendo data em timestamp.
-        let time_from = Date.parse(`${new Date()}`);
-        let time_to =  Date.parse(`${ago}`); 
+        // // Convertendo data em timestamp.
+        // let time_from = Date.parse(`${new Date()}`);
+        // let time_to =  Date.parse(`${ago}`); 
         
         try {
             
-            exec(`python3 ${__dirname}/../../../scripts/percentil.py ${time_to} ${time_from}`, (error, stdout, stderr) => {
+            exec(`python3 ${__dirname}/../../../scripts/percentil.py`, (error, stdout, stderr) => {
                 
                 // Recuperando stderr do 'exec'.
                 if (stderr) {

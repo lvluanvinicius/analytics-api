@@ -5,14 +5,21 @@
     Version: 1.0
 """
 
-
 from zabbix_api import ZabbixAPI
 from sessionZabbix import connect
 from json import dumps
-
+from sys import argv
 import datetime
 import math
 
+
+
+timefrom=int(int(argv[1]) / 1000)
+timetill=int(int(argv[2]) / 1000)
+
+
+#print(type(timefrom))
+#exit(0)
 
 zapi = connect()
 
@@ -21,6 +28,8 @@ items = zapi.history.get({
     "history": 3,
     "itemids": [282627], #item de coleta valor médio no intervalo de 5 min    
     "sortorder": "DESC",
+    "time_from" : timefrom,
+    "time_till" : timetill,
     "sortfield": "clock"
 })
 
@@ -36,7 +45,7 @@ for item in items:
 #Lista de items acima de 10gb
 item10Max=[]
 for item in items:
-    if int(item['value']) > 80000000000: 
+    if int(item['value']) > 1000000000: 
         clock_datetime_full = datetime.datetime.fromtimestamp(int(item['clock']))
         clock_formatted_full = clock_datetime_full.strftime('%Y/%m/%d %H:%M:%S')
         item10Max.append({ "value": item['value'], "clock": clock_formatted_full})
@@ -45,13 +54,15 @@ for item in items:
 #Lista de items abaixo de 10gb
 item10Min=[]
 for item in items:
-    if int(item['value']) <= 80000000000: 
+    if int(item['value']) <= 1000000000: 
         clock_datetime_full = datetime.datetime.fromtimestamp(int(item['clock']))
         clock_formatted_full = clock_datetime_full.strftime('%Y/%m/%d %H:%M:%S')
         item10Min.append({ "value": item['value'], "clock": clock_formatted_full})
 
+
+
 #Organiza lista de maneira crescente 
-item10Max.sort()
+# item10Max.sort()
 itemOrder = item10Max
 
 #Com número de itens da lista realiza a media, removendo os 5% maximos da lista. (é necessário sempre remover)
@@ -87,7 +98,6 @@ def localeItemRemoved(removedItems):
 for itB in removedItems:
      localeItemRemoved(itB)
 
-
 #busca na lista o datatime do valor (Lista 95%).
 itemValueClock_95 = []
 def localeItem(item):
@@ -100,14 +110,12 @@ def localeItem(item):
 for itA in itemAux:
     localeItem(itA)
 
-
 #Total de consumo 
 sum = sum([int(s) for s in itemAux])
 #Consumo total em mb
 megabytes = sum / (8 * 1000000)
 #Consumo em R$ (R$ 2,00 por MB)
 real = megabytes*2.00
-
 
 
 print(dumps({
@@ -118,5 +126,5 @@ print(dumps({
     "itemValueClock_5max": itemValueClock_5max,
     "item10Max" : item10Max,
     "item10Min" : item10Min,
-    "itemFull" : itemFull,
+    "itemFull" : itemFull
 }))
