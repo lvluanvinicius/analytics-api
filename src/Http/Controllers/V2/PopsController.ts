@@ -31,11 +31,11 @@ export default class PopsController {
                     const stdResult = JSON.parse(stdout.replace(/\s/g, ''));
                     // Retornando a resposta do script ao usuário.
 
-                    return response.status(200).json({ COUNTS: stdResult });
+                    return response.status(200).json(stdResult);
                 }
             });
         } catch (error) {
-            const errorResponse = ErrorsHandle(error)
+            const errorResponse = ErrorsHandle(error) 
 
             // Buscando por erros.
             return response.status(Number(errorResponse?.code)).json({
