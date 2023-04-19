@@ -11,6 +11,7 @@ import jwtProtected from './Http/Middlewares/JwtMiddleware';
 import gponAnalyticsRouter from './routes/gponAnalytics';
 import gponOnusDbmRouteV2 from './routes/gponOnusDbmV2';
 import percentilRouter from './routes/percentil';
+import popsRouter from './routes/pops';
  
 const server = express();
 const route = Router();
@@ -61,6 +62,9 @@ server.use("/datacom", [gponOnusDbmRouteV2]);
 
 
 server.use('/percentil', jwtProtected, [percentilRouter]);
+
+
+server.use('/pops', jwtProtected, [popsRouter]);
 
 
 /**
