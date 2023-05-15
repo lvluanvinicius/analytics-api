@@ -2,11 +2,14 @@ import { Request, Response } from "express";
 import { exec, ExecException, ExecFileException } from 'child_process';
 import ErrorsHandle from "../../../Helpers/errors.app";
 
-export default class PopsController {
+
+
+export default class InterconnectionController {
+
     async index(request: Request, response: Response) {
         try {
 
-            exec(`python3 ${__dirname}/../../../scripts/pops.py`, (error, stdout, stderr) => {
+            exec(`python3 ${__dirname}/../../../scripts/interconnection.py`, (error, stdout, stderr) => {
 
                 // Recuperando stderr do 'exec'.
                 if (stderr) {

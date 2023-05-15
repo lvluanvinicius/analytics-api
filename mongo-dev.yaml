@@ -11,8 +11,8 @@ services:
       monitoring-network:
 
     volumes:
-      - "$PWD/mongodb/mongo-repl.key:/data/mongo-repl.key"
-      - "$PWD/mongodb/data/db1:/data/db"
+      - "/home/venerando/luan/analytics-api/mongodb/mongo-repl.key:/data/mongo-repl.key"
+      - "/home/venerando/luan/analytics-api/mongodb/data/db1:/data/db"
 
   analytics-0:    
     image: mongo:4.4.17
@@ -24,9 +24,9 @@ services:
       monitoring-network:
 
     volumes:
-      - "$PWD/mongodb/setup.sh:/scripts/setup.sh"
-      - "$PWD/mongodb/mongo-repl.key:/data/mongo-repl.key"
-      - "$PWD/mongodb/data/db0:/data/db"
+      - "/home/venerando/luan/analytics-api/mongodb/setup.sh:/scripts/setup.sh"
+      - "/home/venerando/luan/analytics-api/mongodb/mongo-repl.key:/data/mongo-repl.key"
+      - "/home/venerando/luan/analytics-api/mongodb/data/db0:/data/db"
 
 
 networks:

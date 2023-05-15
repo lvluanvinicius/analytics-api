@@ -12,6 +12,8 @@ import gponAnalyticsRouter from './routes/gponAnalytics';
 import gponOnusDbmRouteV2 from './routes/gponOnusDbmV2';
 import percentilRouter from './routes/percentil';
 import popsRouter from './routes/pops';
+import Interconnection from './routes/interconnection';
+import proxmoxRouter from './routes/proxmox';
  
 const server = express();
 const route = Router();
@@ -66,6 +68,11 @@ server.use('/percentil', jwtProtected, [percentilRouter]);
 
 server.use('/pops', jwtProtected, [popsRouter]);
 
+
+server.use('/interconnection',jwtProtected, [Interconnection]);
+
+
+server.use('/proxmox', proxmoxRouter);
 
 /**
  * Criando servidor e configurando certificados SSL. 

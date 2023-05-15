@@ -1,25 +1,31 @@
-from zabbix_api import ZabbixAPI
 from sessionZabbix import connect
 from json import dumps
-
-import datetime
-import math
-
 
 
 zapi = connect()
 
 hosts = zapi.host.get({
-        "output": ["host"],
+        "output": ["name"],
         "groupids": ["351"],
         "filter": {
             "groupids": ["351"],
             'status' : 0
         },
         "selectItems": ["itemid", "lastvalue",],
-        "selectInventory" : ["location"],
+        "selectInventory" : ["location"]
 })
 
 
-print(dumps(hosts))
- 
+newHosts=[]
+for host in hosts:
+    try:
+        newHosts.append({
+            "host": host["name"],
+            "location": host['inventory']['location'],
+            "lastvalue": host["items"][0]['lastvalue']
+        })
+    except Exception as err:
+        continue
+        
+
+print(dumps(newHosts))

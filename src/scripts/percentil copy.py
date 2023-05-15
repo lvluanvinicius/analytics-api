@@ -5,7 +5,6 @@
     Version: 1.0
 """
 
-from zabbix_api import ZabbixAPI
 from sessionZabbix import connect
 from json import dumps
 from sys import argv
